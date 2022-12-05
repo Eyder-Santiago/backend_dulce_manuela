@@ -17,11 +17,10 @@ class ValidarToken
      */
     public function handle(Request $request, Closure $next)
     {
-        $usuarioId = $request->get('id_usuario');
-        $valor = $request->get('valor');
-        $token = Token::where('user_id', $usuarioId)
-            ->where('valor', $valor)
-            ->whereRaw('created_at >= cast((now() + interval -(30) day) as date) limit 0, 1')
+        $xToken = json_decode($request->header('x-token'));
+        $token = Token::where('user_id', $xToken->idUsuario)
+            ->where('valor', $xToken->valor)
+            ->whereRaw('created_at >= cast((now() + interval -(30) day) as date)')
             ->take(1)
             ->first();
         if (empty($token)) {

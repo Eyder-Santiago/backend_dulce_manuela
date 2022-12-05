@@ -14,17 +14,12 @@ class AdminProductoController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $query = Producto::query();
+        if ($request->has('param')) {
+            $query->where('nombre', 'like', "%" . $request->get("param") . "%");
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $query->get()->toJson();
     }
 
     /**
@@ -35,29 +30,18 @@ class AdminProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $retorno = json_decode($request->getContent());
+        $producto = new Producto();
+        $producto->nombre= $retorno->nombre;
+        $producto->precio= $retorno->precio;
+        $producto->stock= $retorno->stock;
+        $producto->imagen_url= $retorno->urlImagen;
+        $producto->descripcion= $retorno->descripcion;
+        $producto->estado= $retorno->estado;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Producto $producto)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Producto $producto)
-    {
-        //
+        $producto->save();
+        $retorno->recibido = "OK";
+        return response()->json($retorno);
     }
 
     /**
@@ -69,7 +53,18 @@ class AdminProductoController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
-        //
+        $retorno = json_decode($request->getContent());
+        $retorno->recibido = "OK";
+
+        $producto->nombre= $retorno->nombre;
+        $producto->precio= $retorno->precio;
+        $producto->stock= $retorno->stock;
+        $producto->imagen_url= $retorno->urlImagen;
+        $producto->descripcion= $retorno->descripcion;
+        $producto->estado= $retorno->estado;
+
+        $producto->save();
+        return response()->json($retorno);
     }
 
     /**
@@ -80,6 +75,6 @@ class AdminProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
-        //
+        $producto->delete();
     }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nombre', 30)->nullable(false)->default('');
             $table->integer('precio')->nullable(false)->default(0);
             $table->integer('stock')->nullable(false)->default(0);
-            $table->string('url_imagen', 200)->nullable(false)->default('');
+            $table->string('imagen_url', 200)->nullable(false)->default('');
             $table->string('descripcion', 200)->nullable(false)->default('');
             $table->integer('estado')->nullable(false)->default(0);
             $table->timestamps();

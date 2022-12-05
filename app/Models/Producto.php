@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,8 +21,15 @@ class Producto extends Model
         'nombre',
         'precio',
         'stock',
-        'urlimagen',
+        'url_imagen',
         'descripcion',
         'estado',
     ];
+
+    protected $appends = ['urlImagen'];
+
+    public function getUrlImagenAttribute()
+    {
+        return $this->attributes["url_imagen"];
+    }
 }
