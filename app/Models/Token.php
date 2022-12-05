@@ -9,7 +9,7 @@ class Token extends Model
 {
     use HasFactory;
 
-    protected $table = "producto";
+    protected $table = "token";
 
     /**
      * The attributes that are mass assignable.
