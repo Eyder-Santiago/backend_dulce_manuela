@@ -39,7 +39,8 @@ class CuentaController extends Controller
             return response()->json($retorno);
         }
 
-        Token::where('user_id', $user->id)->delete();
+        //Token::where('user_id', $user->id)->delete();
+        $user->tokens()->delete();
 
         $token = new Token();
         $token->user_id = $user->id;
@@ -53,6 +54,55 @@ class CuentaController extends Controller
             'id_usuario' => $user->id,
         ];
 
+        return response()->json($retorno);
+    }
+
+    public function listaUsuarios(Request $request) {
+        $query = User::where("estado", 1);
+        if ($request->has('param')) {
+            $query->where('nombre', 'like', "%" . $request->get("param") . "%");
+        }
+
+        return $query->get()->toJson();
+    }
+
+    public function registrarUsuario(Request $request) {
+        $retorno = json_decode($request->getContent());
+        
+        $usuario = new User();
+        $usuario->nombre = $retorno->nombre;
+        $usuario->apellido = $retorno->apellido;
+        $usuario->email = $retorno->email;
+        $usuario->direccion = $retorno->direccion;
+        $usuario->birth_date = $retorno->birthDate;
+        $usuario->num_celular = $retorno->numCelular;
+        $usuario->password = $retorno->password;
+        $usuario->estado= $retorno->estado;
+
+        $usuario->save();        
+        $retorno->recibido = "OK";
+        return response()->json($retorno);
+    }
+
+    public function actualizarPassword(Request $request) {
+        $retorno = json_decode($request->getContent());
+        $retorno->recibido = "OK";
+
+        $usuario = User::find($retorno->id);
+        $usuario->password = $retorno->password;
+        $usuario->save();
+
+        return response()->json($retorno);
+    }
+
+    public function actualizarUsuario(Request $request, User $usuario) {
+        $retorno = json_decode($request->getContent());
+        $usuario->fill((array)$retorno);
+        $usuario->birth_date = $retorno->birthDate;
+        $usuario->num_celular = $retorno->numCelular;
+
+        $usuario->save();        
+        $retorno->recibido = "OK";
         return response()->json($retorno);
     }
 }

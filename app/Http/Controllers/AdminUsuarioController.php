@@ -12,19 +12,14 @@ class AdminUsuarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $query = User::where("estado", 1);
+        if ($request->has('param')) {
+            $query->where('nombre', 'like', "%" . $request->get("param") . "%");
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $query->get()->toJson();
     }
 
     /**
@@ -35,29 +30,16 @@ class AdminUsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $retorno = json_decode($request->getContent());
+        
+        $usuario = new User();
+        $usuario->fill((array)$retorno);
+        $usuario->birth_date = $retorno->birthDate;
+        $usuario->num_celular = $retorno->numCelular;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
+        $usuario->save();        
+        $retorno->recibido = "OK";
+        return response()->json($retorno);
     }
 
     /**
@@ -67,9 +49,16 @@ class AdminUsuarioController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $usuario)
     {
-        //
+        $retorno = json_decode($request->getContent());
+        $usuario->fill((array)$retorno);
+        $usuario->birth_date = $retorno->birthDate;
+        $usuario->num_celular = $retorno->numCelular;
+
+        $usuario->save();        
+        $retorno->recibido = "OK";
+        return response()->json($retorno);
     }
 
     /**
@@ -78,8 +67,9 @@ class AdminUsuarioController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(User $usuario)
     {
-        //
+        $usuario->tokens()->delete();
+        $usuario->delete();
     }
 }

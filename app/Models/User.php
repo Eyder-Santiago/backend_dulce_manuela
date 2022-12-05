@@ -34,7 +34,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        //'password',
         'remember_token',
     ];
 
@@ -46,4 +46,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['birthDate', 'numCelular'];
+
+    public function getBirthDateAttribute()
+    {
+        return $this->attributes["birth_date"];
+    }
+
+    public function getNumCelularAttribute()
+    {
+        return $this->attributes["num_celular"];
+    }
+
+    public function tokens() {
+        return $this->hasMany(Token::class);
+    }
 }

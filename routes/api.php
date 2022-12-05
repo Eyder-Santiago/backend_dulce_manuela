@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminProductoController;
+use App\Http\Controllers\AdminUsuarioController;
 use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\ProductoController;
 use Illuminate\Http\Request;
@@ -23,16 +24,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [CuentaController::class, 'hacerLogin'])->name('login');
 Route::any('/productos', [ProductoController::class, 'index'])->name('productos.index');
+Route::any('/usuarios', [CuentaController::class, 'listaUsuarios'])->name('usuarios.index');
+Route::post('/registrar', [CuentaController::class, 'registrarUsuario'])->name('usuario.registrar');
+Route::put('/password', [CuentaController::class, 'actualizarPassword'])->name('actualizar.password');
+Route::put('/perfil/{usuario}', [CuentaController::class, 'actualizarUsuario'])->name('actualizar.password');
 
-Route::group(['middleware' => ['validar-token']], function() {
+Route::group(['middleware' => ['validar-token'], 'prefix' => 'admin'], function() {
     Route::resources(
         [
             'productos' => AdminProductoController::class,
+            'usuarios' => AdminUsuarioController::class,
         ],
         [
-            // 'as' => 'admin',
-            'except' => ['index', 'show', 'create', 'edit']
+            //'as' => 'admin',
+            'except' => ['show', 'create', 'edit']
         ]
     );
 });
-

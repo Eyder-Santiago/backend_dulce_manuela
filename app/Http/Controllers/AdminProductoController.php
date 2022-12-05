@@ -32,12 +32,8 @@ class AdminProductoController extends Controller
     {
         $retorno = json_decode($request->getContent());
         $producto = new Producto();
-        $producto->nombre= $retorno->nombre;
-        $producto->precio= $retorno->precio;
-        $producto->stock= $retorno->stock;
-        $producto->imagen_url= $retorno->urlImagen;
-        $producto->descripcion= $retorno->descripcion;
-        $producto->estado= $retorno->estado;
+        $producto->fill((array)$retorno);
+        $producto->url_imagen = $retorno->urlImagen;
 
         $producto->save();
         $retorno->recibido = "OK";
@@ -55,13 +51,8 @@ class AdminProductoController extends Controller
     {
         $retorno = json_decode($request->getContent());
         $retorno->recibido = "OK";
-
-        $producto->nombre= $retorno->nombre;
-        $producto->precio= $retorno->precio;
-        $producto->stock= $retorno->stock;
-        $producto->imagen_url= $retorno->urlImagen;
-        $producto->descripcion= $retorno->descripcion;
-        $producto->estado= $retorno->estado;
+        $producto->fill((array)$retorno);
+        $producto->url_imagen = $retorno->urlImagen;
 
         $producto->save();
         return response()->json($retorno);
