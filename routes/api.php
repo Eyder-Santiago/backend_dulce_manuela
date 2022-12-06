@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminProductoController;
 use App\Http\Controllers\AdminUsuarioController;
 use App\Http\Controllers\CuentaController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,13 @@ Route::any('/usuarios', [CuentaController::class, 'listaUsuarios'])->name('usuar
 Route::post('/registrar', [CuentaController::class, 'registrarUsuario'])->name('usuario.registrar');
 Route::put('/password', [CuentaController::class, 'actualizarPassword'])->name('actualizar.password');
 Route::put('/perfil/{usuario}', [CuentaController::class, 'actualizarUsuario'])->name('actualizar.password');
+
+Route::group(['middleware' => ['validar-token'], 'prefix' => 'pedido'], function() {
+    Route::get('/', [PedidoController::class, 'listaPedidos'])->name('pedido.lista');
+    Route::post('/', [PedidoController::class, 'crearPedido'])->name('pedido.crear');
+    Route::put('/cancelar', [PedidoController::class, 'cancelarPedido'])->name('pedido.cancelar');
+    Route::put('/pagar', [PedidoController::class, 'pagarPedido'])->name('pedido.pagar');
+});
 
 Route::group(['middleware' => ['validar-token'], 'prefix' => 'admin'], function() {
     Route::resources(

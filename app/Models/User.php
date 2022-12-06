@@ -62,4 +62,8 @@ class User extends Authenticatable
     public function tokens() {
         return $this->hasMany(Token::class);
     }
+
+    public function pedidos() {
+        return $this->hasMany(Pedido::class);
+    }
 }
