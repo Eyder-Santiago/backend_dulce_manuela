@@ -51,7 +51,7 @@ class CuentaController extends Controller
             'valida' => 'S',
             'mensaje' => 'OK',
             'token' => $token->valor,
-            'id_usuario' => $user->id,
+            'idUsuario' => $user->id,
         ];
 
         return response()->json($retorno);

@@ -28,8 +28,7 @@ class Producto extends Model
 
     protected $appends = ['urlImagen'];
 
-    public function getUrlImagenAttribute()
-    {
+    public function getUrlImagenAttribute() {
         return $this->attributes["url_imagen"];
     }
 }

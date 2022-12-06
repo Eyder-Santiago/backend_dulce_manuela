@@ -32,4 +32,30 @@ class Pedido extends Model
     public function detalles() {
         return $this->hasMany(DetallePedido::class);
     }
+
+    protected $appends = ['idUsuario', 'cantidadProductos', 'precioTotal', 'medioPago', 'informacionPago', 'fecha'];
+
+    public function getIdUsuarioAttribute() {
+        return $this->attributes["user_id"];
+    }
+
+    public function getCantidadProductosAttribute() {
+        return $this->attributes["cantidad_productos"];
+    }
+
+    public function getPrecioTotalAttribute() {
+        return $this->attributes["precio_total"];
+    }
+
+    public function getMedioPagoAttribute() {
+        return $this->attributes["medio_pago"];
+    }
+
+    public function getInformacionPagoAttribute() {
+        return $this->attributes["informacion_pago"];
+    }
+
+    public function getFechaAttribute() {
+        return $this->attributes["created_at"];
+    }
 }

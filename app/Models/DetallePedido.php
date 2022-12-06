@@ -30,4 +30,22 @@ class DetallePedido extends Model
     public function producto() {
         return $this->belongsTo(Producto::class);
     }
+
+    protected $appends = ['idPedido', 'idProducto', 'precioUnitario', 'precioTotal'];
+
+    public function getIdPedidoAttribute() {
+        return $this->attributes["pedido_id"];
+    }
+
+    public function getIdProductoAttribute() {
+        return $this->attributes["producto_id"];
+    }
+
+    public function getPrecioUnitarioAttribute() {
+        return $this->attributes["precio_unitario"];
+    }
+
+    public function getPrecioTotalAttribute() {
+        return $this->attributes["precio_total"];
+    }
 }

@@ -49,13 +49,11 @@ class User extends Authenticatable
 
     protected $appends = ['birthDate', 'numCelular'];
 
-    public function getBirthDateAttribute()
-    {
+    public function getBirthDateAttribute() {
         return $this->attributes["birth_date"];
     }
 
-    public function getNumCelularAttribute()
-    {
+    public function getNumCelularAttribute() {
         return $this->attributes["num_celular"];
     }
 

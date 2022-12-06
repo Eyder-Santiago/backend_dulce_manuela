@@ -30,7 +30,7 @@ Route::post('/registrar', [CuentaController::class, 'registrarUsuario'])->name('
 Route::put('/password', [CuentaController::class, 'actualizarPassword'])->name('actualizar.password');
 Route::put('/perfil/{usuario}', [CuentaController::class, 'actualizarUsuario'])->name('actualizar.password');
 
-Route::group(['middleware' => ['validar-token'], 'prefix' => 'pedido'], function() {
+Route::group(['middleware' => ['validar-token'], 'prefix' => 'pedidos'], function() {
     Route::get('/', [PedidoController::class, 'listaPedidos'])->name('pedido.lista');
     Route::post('/', [PedidoController::class, 'crearPedido'])->name('pedido.crear');
     Route::put('/cancelar', [PedidoController::class, 'cancelarPedido'])->name('pedido.cancelar');

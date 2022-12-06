@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetallePedido;
 use App\Models\Pedido;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -53,12 +55,12 @@ class PedidoController extends Controller
                 }
 
                 if ($producto->stock < $detalle->cantidad) {
-                    throw new \Exception("El producto no tiene suficiente stock");
+                    throw new \Exception("El producto {$producto->nombre} no tiene suficiente stock");
                 }
 
                 $subtotal = $producto->precio * $detalle->cantidad;
 
-                $detalle = new Detalle([
+                $detalle = new DetallePedido([
                     'pedido_id' => $pedido->id,
                     'producto_id' => $producto->id,
                     'cantidad' => $detalle->cantidad,
