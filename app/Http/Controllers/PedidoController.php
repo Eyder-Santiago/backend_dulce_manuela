@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class PedidoController extends Controller
 {
     public function listaPedidos(Request $request) {
-        $pedidos = Pedido::orderBy('created_at');
+        $pedidos = Pedido::with(['usuario', 'detalles.producto'])->orderBy('created_at');
         if ($request->has('idUsuario')) {
             $pedidos->where('user_id', $request->get('idUsuario'));
         }
