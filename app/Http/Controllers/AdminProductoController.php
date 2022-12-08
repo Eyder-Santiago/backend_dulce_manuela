@@ -7,6 +7,39 @@ use Illuminate\Http\Request;
 
 class AdminProductoController extends Controller
 {
+    private $rutaImagenes = "/almacenamiento/imagenes/productos/";
+    
+    private function crearCarpetas($ruta) {
+        $partes = explode("/", $ruta);
+        $rutaCarpeta = "";
+        foreach ($partes as $parte) {
+            if ($parte === "") {
+                continue;
+            }
+
+            $rutaCarpeta .= "/" . $parte;
+
+            if (!is_dir(public_path($rutaCarpeta))) {
+                mkdir(public_path($rutaCarpeta));
+            }
+        }
+    }
+
+    private function obtenerDatosImagen($imagen, $ruta) {
+        list($encabezado, $contenido) = explode(",", $imagen);
+        $extension = explode(";", $encabezado);
+        $extension = explode("/", reset($extension));
+        return [
+            $ruta . uniqid() . "." . end($extension),
+            $contenido
+        ];
+    }
+
+    private function guardarImagen($imagen, $contenido) {
+        $rutaArchivo = public_path($imagen);        
+        file_put_contents($rutaArchivo, base64_decode($contenido));        
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,11 +66,19 @@ class AdminProductoController extends Controller
         $retorno = json_decode($request->getContent());
         $producto = new Producto();
         $producto->fill((array)$retorno);
-        $producto->url_imagen = $retorno->urlImagen;
+        if (!empty($retorno->imagen)) {
+            list($nombreArchivo, $contenido) = $this->obtenerDatosImagen($retorno->imagen, $this->rutaImagenes);
+            $this->crearCarpetas($this->rutaImagenes);
+            $this->guardarImagen($nombreArchivo, $contenido);
+            $producto->url_imagen = asset($nombreArchivo);
+        }
+        else {
+            $producto->url_imagen = $retorno->urlImagen;
+        }
 
         $producto->save();
         $retorno->recibido = "OK";
-        return response()->json($retorno);
+        return response()->json($producto);
     }
 
     /**
@@ -50,12 +91,22 @@ class AdminProductoController extends Controller
     public function update(Request $request, Producto $producto)
     {
         $retorno = json_decode($request->getContent());
+        
         $retorno->recibido = "OK";
         $producto->fill((array)$retorno);
-        $producto->url_imagen = $retorno->urlImagen;
+
+        if (!empty($retorno->imagen)) {
+            list($nombreArchivo, $contenido) = $this->obtenerDatosImagen($retorno->imagen, $this->rutaImagenes);
+            $this->crearCarpetas($this->rutaImagenes);
+            $this->guardarImagen($nombreArchivo, $contenido);
+            $producto->url_imagen = asset($nombreArchivo);
+        }
+        else {
+            $producto->url_imagen = $retorno->urlImagen;
+        }
 
         $producto->save();
-        return response()->json($retorno);
+        return response()->json($producto);
     }
 
     /**
