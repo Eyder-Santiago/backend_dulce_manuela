@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CuentaController extends Controller
 {
@@ -31,7 +32,8 @@ class CuentaController extends Controller
             return response()->json($retorno);
         }
 
-        if ($user->password != $password) {
+        //if ($user->password != Hash::make($password)) {
+        if (!Hash::check($password, $user->password)) {
             $retorno->respuesta = [
                 'valida' => 'N',
                 'mensaje' => 'El password no es válido',
@@ -76,7 +78,7 @@ class CuentaController extends Controller
         $usuario->direccion = $retorno->direccion;
         $usuario->birth_date = $retorno->birthDate;
         $usuario->num_celular = $retorno->numCelular;
-        $usuario->password = $retorno->password;
+        $usuario->password = Hash::make($retorno->password);
         $usuario->estado= $retorno->estado;
 
         $usuario->save();        
@@ -89,7 +91,7 @@ class CuentaController extends Controller
         $retorno->recibido = "OK";
 
         $usuario = User::find($retorno->id);
-        $usuario->password = $retorno->password;
+        $usuario->password = Hash::make($retorno->password);
         $usuario->save();
 
         return response()->json($retorno);
@@ -97,9 +99,16 @@ class CuentaController extends Controller
 
     public function actualizarUsuario(Request $request, User $usuario) {
         $retorno = json_decode($request->getContent());
+        $passwordAnt = $usuario->password;
         $usuario->fill((array)$retorno);
         $usuario->birth_date = $retorno->birthDate;
         $usuario->num_celular = $retorno->numCelular;
+        if (!empty($retorno->password)) {
+            $usuario->password = Hash::make($retorno->password);
+        }
+        else {
+            $usuario->password = $passwordAnt;
+        }
 
         $usuario->save();        
         $retorno->recibido = "OK";
